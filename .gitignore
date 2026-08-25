@@ -1,0 +1,20 @@
+# Visual Studio temporary files
+.vs/
+
+# .NET build files
+bin/
+obj/
+
+# React / Node files
+node_modules/
+dist/
+
+# Environment files
+.env
+.env.*
+
+# VS Code
+.vscode/
+
+# Windows
+Thumbs.db
