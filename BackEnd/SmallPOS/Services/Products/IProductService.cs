@@ -1,4 +1,4 @@
-using SmallPOS.API.DTOs.Products;
+using SmallPOS.API.Models.Products;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,13 +6,13 @@ namespace SmallPOS.API.Services.Products;
 
 public interface IProductService
 {
-    Task<IEnumerable<ProductDto>> GetAllAsync();
+    Task<IEnumerable<ProductResponse>> GetAllAsync();
 
-    Task<ProductDto?> GetByIdAsync(int id);
+    Task<ProductResponse?> GetByIdAsync(int id);
 
-    Task<int> CreateAsync(CreateProductDto dto);
+    Task<ProductResponse?> CreateAsync(ProductRequest request);
 
-    Task<bool> UpdateAsync(int id, UpdateProductDto dto);
+    Task<ProductResponse?> UpdateAsync(int id, ProductRequest request);
 
     Task<bool> DeleteAsync(int id);
 }
