@@ -1,7 +1,9 @@
-namespace SmallPOS.API.DTOs.Products;
+namespace SmallPOS.API.Models.Products;
 
-public class UpdateProductDto
+public class ProductResponse
 {
+    public int Id { get; set; }
+
     public string Name { get; set; } = string.Empty;
 
     public string SKU { get; set; } = string.Empty;
@@ -14,5 +16,5 @@ public class UpdateProductDto
 
     public int Stock { get; set; }
 
-    public string Status { get; set; } = "Active";
+    public string Status { get; set; } = string.Empty;
 }

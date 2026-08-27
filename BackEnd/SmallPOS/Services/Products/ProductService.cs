@@ -1,5 +1,4 @@
-using SmallPOS.API.DTOs.Products;
-using SmallPOS.API.Models;
+using SmallPOS.API.Models.Products;
 using SmallPOS.API.Repositories.Products;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,73 +14,39 @@ public class ProductService : IProductService
         _productRepository = productRepository;
     }
 
-    public async Task<IEnumerable<ProductDto>> GetAllAsync()
+    public Task<IEnumerable<ProductResponse>> GetAllAsync()
     {
-        var products = await _productRepository.GetAllAsync();
-
-        return products.Select(MapToDto);
+        return _productRepository.GetAllAsync();
     }
 
-    public async Task<ProductDto?> GetByIdAsync(int id)
+    public Task<ProductResponse?> GetByIdAsync(int id)
     {
-        var product = await _productRepository.GetByIdAsync(id);
+        return _productRepository.GetByIdAsync(id);
+    }
 
-        if (product == null)
+    public async Task<ProductResponse?> CreateAsync(ProductRequest request)
+    {
+        var id = await _productRepository.CreateAsync(request);
+
+        return await _productRepository.GetByIdAsync(id);
+    }
+
+    public async Task<ProductResponse?> UpdateAsync(
+        int id,
+        ProductRequest request)
+    {
+        var updated = await _productRepository.UpdateAsync(id, request);
+
+        if (!updated)
+        {
             return null;
+        }
 
-        return MapToDto(product);
+        return await _productRepository.GetByIdAsync(id);
     }
 
-    public async Task<int> CreateAsync(CreateProductDto dto)
+    public Task<bool> DeleteAsync(int id)
     {
-        var product = new Product
-        {
-            Name = dto.Name,
-            SKU = dto.SKU,
-            CategoryId = dto.CategoryId,
-            PurchasePrice = dto.PurchasePrice,
-            SalePrice = dto.SalePrice,
-            Stock = dto.Stock,
-            Status = dto.Status
-        };
-
-        return await _productRepository.CreateAsync(product);
-    }
-
-    public async Task<bool> UpdateAsync(int id, UpdateProductDto dto)
-    {
-        var product = new Product
-        {
-            Id = id,
-            Name = dto.Name,
-            SKU = dto.SKU,
-            CategoryId = dto.CategoryId,
-            PurchasePrice = dto.PurchasePrice,
-            SalePrice = dto.SalePrice,
-            Stock = dto.Stock,
-            Status = dto.Status
-        };
-
-        return await _productRepository.UpdateAsync(product);
-    }
-
-    public async Task<bool> DeleteAsync(int id)
-    {
-        return await _productRepository.DeleteAsync(id);
-    }
-
-    private static ProductDto MapToDto(Product product)
-    {
-        return new ProductDto
-        {
-            Id = product.Id,
-            Name = product.Name,
-            SKU = product.SKU,
-            CategoryId = product.CategoryId,
-            PurchasePrice = product.PurchasePrice,
-            SalePrice = product.SalePrice,
-            Stock = product.Stock,
-            Status = product.Status
-        };
+        return _productRepository.DeleteAsync(id);
     }
 }

@@ -1,6 +1,6 @@
-namespace SmallPOS.API.DTOs.Products;
+namespace SmallPOS.API.Models.Products;
 
-public class CreateProductDto
+public class ProductRequest
 {
     public string Name { get; set; } = string.Empty;
 

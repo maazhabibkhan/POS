@@ -12,7 +12,6 @@ import { validateProduct } from "../validation/productValidation";
 
 import { handleApiError } from "../../../api/apiErrorHandler";
 
-
 const useProducts = () => {
 
     const [products, setProducts] = useState([]);
@@ -33,15 +32,8 @@ const useProducts = () => {
 
     const [apiError, setApiError] = useState(null);
 
-
-    // =========================
-    // GET PRODUCTS
-    // =========================
-
     const loadProducts = async () => {
-
         try {
-
             setLoading(true);
             setApiError(null);
 
@@ -50,25 +42,14 @@ const useProducts = () => {
             setProducts(data);
 
         } catch (error) {
-
-            setApiError(
-                handleApiError(error)
-            );
+            setApiError(handleApiError(error));
 
         } finally {
-
             setLoading(false);
-
         }
     };
 
-
-    // =========================
-    // CREATE / UPDATE PRODUCT
-    // =========================
-
     const handleSubmit = async (e) => {
-
         e.preventDefault();
 
         const validationErrors = validateProduct(product);
@@ -79,72 +60,49 @@ const useProducts = () => {
             return false;
         }
 
-
         try {
-
             setLoading(true);
             setApiError(null);
 
-
             if (product.id) {
-
-                await updateProduct(
+                const updatedProduct = await updateProduct(
                     product.id,
                     product
                 );
 
                 setProducts((prevProducts) =>
                     prevProducts.map((item) =>
-                        item.id === product.id
-                            ? product
+                        item.id === updatedProduct.id
+                            ? updatedProduct
                             : item
                     )
                 );
 
-            
-
             } else {
-
-                await createProduct(
-                    product
-                );
+                const createdProduct = await createProduct(product);
 
                 setProducts((prevProducts) => [
                     ...prevProducts,
-                    product
+                    createdProduct
                 ]);
-
             }
-
 
             resetProduct();
 
             return true;
 
         } catch (error) {
-
-            setApiError(
-                handleApiError(error)
-            );
+            setApiError(handleApiError(error));
 
             return false;
 
         } finally {
-
             setLoading(false);
-
         }
     };
 
-
-    // =========================
-    // DELETE PRODUCT
-    // =========================
-
     const handleDelete = async (id) => {
-
         try {
-
             setLoading(true);
             setApiError(null);
 
@@ -157,100 +115,54 @@ const useProducts = () => {
             );
 
         } catch (error) {
-
-            setApiError(
-                handleApiError(error)
-            );
+            setApiError(handleApiError(error));
 
         } finally {
-
             setLoading(false);
-
         }
     };
 
-
-    // =========================
-    // PRODUCT CHANGE
-    // =========================
-
     const handleProductChange = (e) => {
-
         const { name, value } = e.target;
 
         setProduct((prevProduct) => ({
             ...prevProduct,
             [name]: value
         }));
-
     };
 
-
-    // =========================
-    // FILTER CHANGE
-    // =========================
-
     const handleFilterChange = (e) => {
-
         const { name, value } = e.target;
 
         setFilters((prevFilters) => ({
             ...prevFilters,
             [name]: value
         }));
-
     };
-
-
-    // =========================
-    // RESET PRODUCT
-    // =========================
 
     const resetProduct = () => {
-
-        setProduct(
-            createProductModel()
-        );
-
+        setProduct(createProductModel());
         setErrors({});
-
     };
 
-
-    // =========================
-    // LOAD PRODUCTS ON PAGE LOAD
-    // =========================
-
     useEffect(() => {
-
         loadProducts();
-
     }, []);
 
-
-
     const filteredProducts = products.filter((product) => {
+        const searchText = filters.search.toLowerCase();
 
-            const searchText = filters.search.toLowerCase();
+        const matchesSearch =
+            !filters.search ||
+            product.name.toLowerCase().includes(searchText) ||
+            product.sku.toLowerCase().includes(searchText);
 
-            const matchesSearch =
-                !filters.search ||
-                product.name.toLowerCase().includes(searchText) ||
-                product.sku.toLowerCase().includes(searchText);
+        const matchesStatus =
+            !filters.status ||
+            product.status === filters.status;
 
-
-            const matchesStatus =
-                !filters.status ||
-                product.status === filters.status;
-
-
-            return (
-                matchesSearch &&
-                matchesStatus
-            );
-
-        });
-
+        return matchesSearch && matchesStatus;
+    });
 
     return {
         products,
@@ -269,8 +181,6 @@ const useProducts = () => {
         resetProduct,
         setProduct
     };
-
 };
-
 
 export default useProducts;
