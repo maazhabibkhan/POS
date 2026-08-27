@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-
-using SmallPOS.API.DTOs.Products;
+using SmallPOS.API.Models.Products;
 using SmallPOS.API.Services.Products;
 using System.Threading.Tasks;
 
@@ -17,9 +16,6 @@ public class ProductController : ControllerBase
         _productService = productService;
     }
 
-
-    // GET: api/Product
-
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -27,9 +23,6 @@ public class ProductController : ControllerBase
 
         return Ok(products);
     }
-
-
-    // GET: api/Product/5
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id)
@@ -47,40 +40,34 @@ public class ProductController : ControllerBase
         return Ok(product);
     }
 
-
-    // POST: api/Product
-
     [HttpPost]
-    public async Task<IActionResult> Create(
-        CreateProductDto dto)
+    public async Task<IActionResult> Create(ProductRequest request)
     {
-        var id = await _productService.CreateAsync(dto);
+        var product = await _productService.CreateAsync(request);
+
+        if (product == null)
+        {
+            return BadRequest(new
+            {
+                message = "Product could not be created."
+            });
+        }
 
         return CreatedAtAction(
             nameof(GetById),
-            new { id },
-            new
-            {
-                id,
-                message = "Product created successfully."
-            }
+            new { id = product.Id },
+            product
         );
     }
-
-
-    // PUT: api/Product/5
 
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(
         int id,
-        UpdateProductDto dto)
+        ProductRequest request)
     {
-        var updated = await _productService.UpdateAsync(
-            id,
-            dto
-        );
+        var product = await _productService.UpdateAsync(id, request);
 
-        if (!updated)
+        if (product == null)
         {
             return NotFound(new
             {
@@ -88,14 +75,8 @@ public class ProductController : ControllerBase
             });
         }
 
-        return Ok(new
-        {
-            message = "Product updated successfully."
-        });
+        return Ok(product);
     }
-
-
-    // DELETE: api/Product/5
 
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
