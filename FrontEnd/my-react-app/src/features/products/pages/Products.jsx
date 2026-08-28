@@ -9,9 +9,9 @@ import ProductFilters from "../components/ProductFilters";
 import Modal from "../../../components/common/Modal";
 import Button from "../../../components/common/Button";
 
+import "./Products.css";
 
 function Products() {
-
     const {
         products,
         filteredProducts,
@@ -30,72 +30,43 @@ function Products() {
         setProduct
     } = useProducts();
 
-
     const [showForm, setShowForm] = useState(false);
 
-
     const handleAddProduct = () => {
-
         resetProduct();
-
         setShowForm(true);
-
     };
-
 
     const handleCloseForm = () => {
-
         resetProduct();
-
         setShowForm(false);
-
     };
-
 
     const handleEdit = (product) => {
-
         setProduct(product);
-
         setShowForm(true);
-
     };
 
-
     const handleProductSubmit = async (e) => {
-
         const success = await handleSubmit(e);
 
         if (success) {
             setShowForm(false);
         }
-
     };
-
 
     return (
         <div className="products-page">
-
             <div className="page-header">
-
                 <div>
-
-                    <h1>
-                        Products
-                    </h1>
-
-                    <p>
-                        Manage your products and inventory
-                    </p>
-
+                    <h1>Products</h1>
+                    <p>Manage your products and inventory</p>
                 </div>
-
 
                 <Button onClick={handleAddProduct}>
                     Add Product
                 </Button>
-
             </div>
-
 
             {apiError && (
                 <div className="error-message">
@@ -103,13 +74,11 @@ function Products() {
                 </div>
             )}
 
-
             <ProductFilters
                 filters={filters}
                 onChange={handleFilterChange}
                 categories={[]}
             />
-
 
             <ProductTable
                 products={filteredProducts}
@@ -118,18 +87,11 @@ function Products() {
                 loading={loading}
             />
 
-
             {showForm && (
-
                 <Modal
-                    title={
-                        product.id
-                            ? "Edit Product"
-                            : "Add Product"
-                    }
+                    title={product.id ? "Edit Product" : "Add Product"}
                     onClose={handleCloseForm}
                 >
-
                     <ProductForm
                         product={product}
                         categories={[]}
@@ -138,14 +100,10 @@ function Products() {
                         errors={errors}
                         loading={loading}
                     />
-
                 </Modal>
-
             )}
-
         </div>
     );
 }
-
 
 export default Products;
