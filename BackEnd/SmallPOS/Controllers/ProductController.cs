@@ -53,11 +53,7 @@ public class ProductController : ControllerBase
             });
         }
 
-        return CreatedAtAction(
-            nameof(GetById),
-            new { id = product.Id },
-            product
-        );
+        return Ok(product);
     }
 
     [HttpPut("{id:int}")]
