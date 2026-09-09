@@ -17,34 +17,7 @@ select {
 }
 
 /* =========================
-   PRODUCTS PAGE
-========================= */
-
-.products-page {
-    padding: 30px;
-}
-
-/* =========================
-   PAGE HEADER
-========================= */
-
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-}
-
-.page-header h1 {
-    margin-bottom: 5px;
-}
-
-.page-header p {
-    color: #777;
-}
-
-/* =========================
-   BUTTON
+   COMMON BUTTON
 ========================= */
 
 .btn {
@@ -75,7 +48,7 @@ select {
 }
 
 /* =========================
-   FORM
+   COMMON FORM
 ========================= */
 
 .form-group {
@@ -103,7 +76,7 @@ select {
 }
 
 /* =========================
-   ERROR
+   COMMON ERROR
 ========================= */
 
 .error-message {
@@ -113,65 +86,7 @@ select {
 }
 
 /* =========================
-   FILTERS
-========================= */
-
-.product-filters {
-    display: flex;
-    gap: 15px;
-    background: white;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-}
-
-.product-filters .form-group {
-    flex: 1;
-}
-
-/* =========================
-   TABLE
-========================= */
-
-.table-container {
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th,
-td {
-    padding: 14px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-}
-
-th {
-    background: #f3f4f6;
-    font-weight: 600;
-}
-
-tr:hover {
-    background: #f9fafb;
-}
-
-.table-actions {
-    display: flex;
-    gap: 8px;
-}
-
-.table-loading {
-    padding: 30px;
-    text-align: center;
-}
-
-/* =========================
-   MODAL
+   COMMON MODAL
 ========================= */
 
 .modal-overlay {
