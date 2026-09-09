@@ -7,6 +7,13 @@ import {
     deleteProduct
 } from "../services/productApi";
 
+import {
+    saveProducts,
+    getProductsFromDb,
+    saveProductToDb,
+    deleteProductFromDb
+} from "../../../db/indexedDb";
+
 import { createProductModel } from "../models/productModel";
 import { validateProduct } from "../validation/productValidation";
 
@@ -39,7 +46,11 @@ const useProducts = () => {
 
             const data = await getProducts();
 
-            setProducts(data);
+            await saveProducts(data);
+
+            const productsFromDb = await getProductsFromDb();
+
+            setProducts(productsFromDb);
 
         } catch (error) {
             setApiError(handleApiError(error));
@@ -70,22 +81,17 @@ const useProducts = () => {
                     product
                 );
 
-                setProducts((prevProducts) =>
-                    prevProducts.map((item) =>
-                        item.id === updatedProduct.id
-                            ? updatedProduct
-                            : item
-                    )
-                );
+                await saveProductToDb(updatedProduct);
 
             } else {
                 const createdProduct = await createProduct(product);
 
-                setProducts((prevProducts) => [
-                    ...prevProducts,
-                    createdProduct
-                ]);
+                await saveProductToDb(createdProduct);
             }
+
+            const productsFromDb = await getProductsFromDb();
+
+            setProducts(productsFromDb);
 
             resetProduct();
 
@@ -108,11 +114,11 @@ const useProducts = () => {
 
             await deleteProduct(id);
 
-            setProducts((prevProducts) =>
-                prevProducts.filter(
-                    (product) => product.id !== id
-                )
-            );
+            await deleteProductFromDb(id);
+
+            const productsFromDb = await getProductsFromDb();
+
+            setProducts(productsFromDb);
 
         } catch (error) {
             setApiError(handleApiError(error));
