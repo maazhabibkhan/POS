@@ -2,7 +2,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using SmallPOS.API.Models;
 using SmallPOS.API.Models.Requests;
 using SmallPOS.API.Models.Responses;
 using SmallPOS.API.Repositories.Authentication;
@@ -36,16 +35,9 @@ public class AuthService : IAuthService
             return null;
         }
 
-        var token = CreateToken(user);
+        user.Token = CreateToken(user);
 
-        return new LoginResponse
-        {
-            Token = token,
-            UserId = user.Id,
-            Username = user.Username,
-            RoleId = user.RoleId,
-            RoleName = user.RoleName
-        };
+        return user;
     }
 
     public async Task<RegisterResponse?> RegisterAsync(RegisterRequest request)
@@ -58,24 +50,10 @@ public class AuthService : IAuthService
         }
 
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
-        var user = await _authRepository.RegisterAsync(request, passwordHash);
-
-        if (user == null)
-        {
-            return null;
-        }
-
-        return new RegisterResponse
-        {
-            UserId = user.Id,
-            Username = user.Username,
-            RoleId = user.RoleId,
-            RoleName = user.RoleName,
-            IsActive = user.IsActive
-        };
+        return await _authRepository.RegisterAsync(request, passwordHash);
     }
 
-    private string CreateToken(User user)
+    private string CreateToken(LoginResponse user)
     {
         var jwtSettings = _configuration.GetSection("Jwt");
         var key = jwtSettings["Key"] ?? throw new InvalidOperationException("JWT key is missing.");
@@ -84,7 +62,7 @@ public class AuthService : IAuthService
 
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Role, user.RoleName)
         };
