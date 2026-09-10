@@ -1,4 +1,5 @@
-using SmallPOS.API.Models.Products;
+using SmallPOS.API.Models.Requests;
+using SmallPOS.API.Models.Responses;
 using SmallPOS.API.Repositories.Products;
 using System.Collections.Generic;
 using System.Threading.Tasks;
