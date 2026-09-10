@@ -1,6 +1,7 @@
 using Microsoft.Data.SqlClient;
 using SmallPOS.API.Data;
-using SmallPOS.API.Models.Products;
+using SmallPOS.API.Models.Requests;
+using SmallPOS.API.Models.Responses;
 using System;
 using System.Collections.Generic;
 using System.Data;
