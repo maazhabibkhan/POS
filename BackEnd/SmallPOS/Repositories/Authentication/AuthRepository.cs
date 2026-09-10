@@ -1,7 +1,7 @@
 using Microsoft.Data.SqlClient;
 using SmallPOS.API.Data;
-using SmallPOS.API.Models;
 using SmallPOS.API.Models.Requests;
+using SmallPOS.API.Models.Responses;
 
 namespace SmallPOS.API.Repositories.Authentication;
 
@@ -14,7 +14,7 @@ public class AuthRepository : IAuthRepository
         _connectionFactory = connectionFactory;
     }
 
-    public async Task<User?> GetByUsernameAsync(string username)
+    public async Task<LoginResponse?> GetByUsernameAsync(string username)
     {
         using var connection = _connectionFactory.CreateConnection();
         using var command = new SqlCommand("sp_GetUserByUsername", connection)
@@ -33,9 +33,9 @@ public class AuthRepository : IAuthRepository
             return null;
         }
 
-        return new User
+        return new LoginResponse
         {
-            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+            UserId = reader.GetInt32(reader.GetOrdinal("Id")),
             Username = reader.GetString(reader.GetOrdinal("Username")),
             PasswordHash = reader.GetString(reader.GetOrdinal("PasswordHash")),
             RoleId = reader.GetInt32(reader.GetOrdinal("RoleId")),
@@ -44,7 +44,7 @@ public class AuthRepository : IAuthRepository
         };
     }
 
-    public async Task<User?> RegisterAsync(RegisterRequest request, string passwordHash)
+    public async Task<RegisterResponse?> RegisterAsync(RegisterRequest request, string passwordHash)
     {
         using var connection = _connectionFactory.CreateConnection();
         using var command = new SqlCommand("sp_RegisterUser", connection)
@@ -65,11 +65,10 @@ public class AuthRepository : IAuthRepository
             return null;
         }
 
-        return new User
+        return new RegisterResponse
         {
-            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+            UserId = reader.GetInt32(reader.GetOrdinal("Id")),
             Username = reader.GetString(reader.GetOrdinal("Username")),
-            PasswordHash = reader.GetString(reader.GetOrdinal("PasswordHash")),
             RoleId = reader.GetInt32(reader.GetOrdinal("RoleId")),
             RoleName = reader.GetString(reader.GetOrdinal("RoleName")),
             IsActive = reader.GetBoolean(reader.GetOrdinal("IsActive"))
