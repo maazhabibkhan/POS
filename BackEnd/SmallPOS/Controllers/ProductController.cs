@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using SmallPOS.API.Models.Products;
+using SmallPOS.API.Models.Requests;
 using SmallPOS.API.Services.Products;
 using System.Threading.Tasks;
 
