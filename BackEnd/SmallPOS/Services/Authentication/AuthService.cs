@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using SmallPOS.API.Models;
 using SmallPOS.API.Models.Requests;
 using SmallPOS.API.Models.Responses;
 using SmallPOS.API.Repositories.Authentication;
@@ -74,7 +75,7 @@ public class AuthService : IAuthService
         };
     }
 
-    private string CreateToken(Models.User user)
+    private string CreateToken(User user)
     {
         var jwtSettings = _configuration.GetSection("Jwt");
         var key = jwtSettings["Key"] ?? throw new InvalidOperationException("JWT key is missing.");
